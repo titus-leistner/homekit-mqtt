@@ -10,7 +10,7 @@ from pyhap.const import CATEGORY_BRIDGE
 import pyhap.characteristic as pyhap_char
 import pyhap.const
 
-import adapters
+from homekit_mqtt import adapters
 
 logger = logging.getLogger(__name__)
 
