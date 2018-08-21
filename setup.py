@@ -5,13 +5,13 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open('HISTORY.md') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=6.0', 'HAP-python[QRCode]>=2.2.2', 'paho-mqtt>=1.3.1']
+requirements = ['Click', 'HAP-python', 'base36', 'pyqrcode', 'paho-mqtt']
 
 setup_requirements = ['pytest-runner', ]
 
@@ -37,6 +37,7 @@ setup(
             'homekit_mqtt=homekit_mqtt.cli:main',
         ],
     },
+    python_requires='>=3.6',
     install_requires=requirements,
     license="GNU General Public License v3",
     long_description=readme + '\n\n' + history,
