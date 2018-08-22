@@ -37,7 +37,7 @@ setup(
             'homekit_mqtt=homekit_mqtt.cli:main',
         ],
     },
-    python_requires='>=3.6',
+    python_requires='>=3.4',
     install_requires=requirements,
     license="GNU General Public License v3",
     long_description=readme + '\n\n' + history,
