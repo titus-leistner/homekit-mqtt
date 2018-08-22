@@ -7,7 +7,6 @@ import pytest
 
 from click.testing import CliRunner
 
-from homekit_mqtt import homekit_mqtt
 from homekit_mqtt import cli
 
 
