@@ -7,22 +7,21 @@ import click
 import logging
 import signal
 
-from pyhap.accessory import Accessory, Bridge
 from pyhap.accessory_driver import AccessoryDriver
 from homekit_mqtt.mqtt_bridge import MqttBridge
 
-from  homekit_mqtt import cfg_loader
+from homekit_mqtt import cfg_loader
+
 
 @click.command()
 @click.option('--reset/--load', default=False,
               help='Reset the bridge before readding it to the Home App again.')
-@click.option('--cfg', default='etc/homekit-mqtt', 
+@click.option('--cfg', default='etc/homekit-mqtt',
               help='The directory containing the accessory configuration.')
 def main(reset, cfg):
     # init logging
     logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-    
+
     if reset:
         # remove accessory.state
         os.remove('accessory.state')
@@ -48,8 +47,10 @@ def main(reset, cfg):
 
     # start HomeKit
     driver.start()
+    print('Returned')
     return 0
 
 
 if __name__ == "__main__":
+    print('Started')
     sys.exit(main())  # pragma: no cover
