@@ -6,9 +6,7 @@ import paho.mqtt.client as mqtt
 
 from pyhap.accessory import Bridge
 from pyhap.const import CATEGORY_BRIDGE
-
 import pyhap.characteristic as pyhap_char
-import pyhap.const
 
 from homekit_mqtt import adapters
 
@@ -31,18 +29,17 @@ def mqtt2hap(hap_format, value):
         return bool(value)
     elif hap_format == pyhap_char.HAP_FORMAT_FLOAT:
         return float(value)
-    elif hap_format == pyhap_char.HAP_FORMAT_STRING:
-        return str(value)
     elif hap_format == pyhap_char.HAP_FORMAT_ARRAY:
-        return json.loads(str(value))
+        return json.loads(value.decode('utf-8'))
     elif hap_format == pyhap_char.HAP_FORMAT_DICTIONARY:
-        return json.loads(str(value))
-    elif hap_format == pyhap_char.HAP_FORMAT_DATA:
-        return str(value)
+        return json.loads(value.decode('utf-8'))
     elif hap_format == pyhap_char.HAP_FORMAT_TLV8:
         return str(value)
     elif hap_format in pyhap_char.HAP_FORMAT_NUMERICS:
         return int(value)
+    elif hap_format in [pyhap_char.HAP_FORMAT_STRING,
+                        pyhap_char.HAP_FORMAT_DATA]:
+        return value.decode('utf-8')
 
     return str(value)
 
@@ -64,9 +61,9 @@ def hap2var(hap_format, value):
     elif hap_format == pyhap_char.HAP_FORMAT_STRING:
         return str(value)
     elif hap_format == pyhap_char.HAP_FORMAT_ARRAY:
-        return json.dumps(str(value))
+        return json.dumps(value)
     elif hap_format == pyhap_char.HAP_FORMAT_DICTIONARY:
-        return json.dumps(str(value))
+        return json.dumps(value)
     elif hap_format == pyhap_char.HAP_FORMAT_DATA:
         return str(value)
     elif hap_format == pyhap_char.HAP_FORMAT_TLV8:
@@ -89,8 +86,8 @@ class MqttBridge(Bridge):
 
     and sends the received values to iOS-devices.
 
-    The optional adapter class accessory.properties['adapter'] from the adapters
-    module is used.
+    The optional adapter class accessory.properties['adapter']
+    from the adapters module is used.
     """
     category = CATEGORY_BRIDGE
 
@@ -187,7 +184,8 @@ class MqttBridge(Bridge):
 
     def __setstate__(self, state):
         """
-        Load the state and set up the MQTT client with the address in the state.
+        Load the state and set up the MQTT client
+        with the address in the state.
         """
         self.__dict__.update(state)
         self._set_server(state['broker_addr'])
@@ -200,6 +198,7 @@ class MqttBridge(Bridge):
         :type topic: str
 
         :param payload: payload of the MQTT message
+        :type payload: bytes
         """
         # split topic into acc, char, serv
         callback = self.getter_callbacks.get(topic, None)

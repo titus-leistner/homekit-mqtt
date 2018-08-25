@@ -14,8 +14,9 @@ from click.testing import CliRunner
 from homekit_mqtt import cli
 
 from pyhap.accessory_driver import AccessoryDriver
+import pyhap.characteristic as pyhap_char
 
-from homekit_mqtt import cfg_loader
+from homekit_mqtt import cfg_loader, mqtt_bridge
 
 
 @pytest.fixture(scope='module')
@@ -98,3 +99,31 @@ def test_cfg_loader(config_dir):
     cfg.read(fname)
 
     assert 'AID' in cfg['Accessory'].keys()
+
+
+def test_mqtt_bridge():
+    # test conversion from MQTT to HAP
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_BOOL, b'true') is True
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_FLOAT, b'3.14') == 3.14
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_INT, b'42') == 42
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_STRING, b'foo') == 'foo'
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_DATA, b'bar') == 'bar'
+
+    assert mqtt_bridge.mqtt2hap(
+        pyhap_char.HAP_FORMAT_ARRAY, b'[1, 1, 2, 3]') == [1, 1, 2, 3]
+
+    assert mqtt_bridge.mqtt2hap(
+        pyhap_char.HAP_FORMAT_ARRAY, b'{"x" : 1, "y" : 2}') == {'x': 1, 'y': 2}
+
+    # test conversion from HAP to python types
+    assert mqtt_bridge.hap2var(pyhap_char.HAP_FORMAT_BOOL, True) is True
+    assert mqtt_bridge.hap2var(pyhap_char.HAP_FORMAT_FLOAT, '3.14') == 3.14
+    assert mqtt_bridge.hap2var(pyhap_char.HAP_FORMAT_INT, 42) == 42
+    assert mqtt_bridge.hap2var(pyhap_char.HAP_FORMAT_STRING, 0.5) == '0.5'
+    assert mqtt_bridge.hap2var(pyhap_char.HAP_FORMAT_DATA, 42) == '42'
+
+    assert mqtt_bridge.hap2var(
+        pyhap_char.HAP_FORMAT_ARRAY, [1, 1, 2, 3]) == '[1, 1, 2, 3]'
+
+    assert mqtt_bridge.hap2var(
+        pyhap_char.HAP_FORMAT_ARRAY, {'x': 1, 'y': 2}) == '{"x": 1, "y": 2}'
