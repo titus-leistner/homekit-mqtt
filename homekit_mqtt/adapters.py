@@ -1,1 +1,1 @@
-import homekit_mqtt.tasmota
+from homekit_mqtt import tasmota
