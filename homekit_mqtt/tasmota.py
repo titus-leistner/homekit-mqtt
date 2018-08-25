@@ -1,5 +1,6 @@
 import json
 
+
 class POWER:
     def input(topic, payload):
         if chr(payload[0]) != '{':
@@ -16,6 +17,7 @@ class POWER:
             return 'ON'
         return 'OFF'
 
+
 class HOLD:
     def input(topic, payload):
         if payload == b'HOLD':
@@ -23,11 +25,12 @@ class HOLD:
         return None
 
     def output(topic, payload):
-        return None 
+        return None
+
 
 class HSBColor:
     cache = {}
-    
+
     def gen_key(topic):
         return '/'.join(topic.split('/')[1:-1])
 
@@ -54,12 +57,14 @@ class HSBColor:
         hsb = ','.join(hsb)
         return hsb
 
+
 class Hue:
     def input(topic, payload):
         return HSBColor.input(topic, payload, 0)
 
     def output(topic, payload):
         return HSBColor.output(topic, payload, 0)
+
 
 class Saturation:
     def input(topic, payload):
@@ -68,9 +73,25 @@ class Saturation:
     def output(topic, payload):
         return HSBColor.output(topic, payload, 1)
 
+
 class Brightness:
     def input(topic, payload):
-        return HSBColor.input(topic, payload, 2)
+        result = json.loads(payload)
+        dimmer = result.get('Dimmer', None)
+        return dimmer
 
     def output(topic, payload):
         return float(payload)
+
+
+class ColorTemperature:
+    def input(topic, payload):
+        result = json.loads(payload)
+        ct = result.get('CT', None)
+        return ct
+
+    def output(topic, payload):
+        ct = int(payload)
+        ct = max(153, min(500, ct))
+
+        return ct
