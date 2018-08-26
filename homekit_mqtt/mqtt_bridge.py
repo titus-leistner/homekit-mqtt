@@ -30,16 +30,16 @@ def mqtt2hap(hap_format, value):
     elif hap_format == pyhap_char.HAP_FORMAT_FLOAT:
         return float(value)
     elif hap_format == pyhap_char.HAP_FORMAT_ARRAY:
-        return json.loads(value.decode('utf-8'))
+        return json.loads(value)
     elif hap_format == pyhap_char.HAP_FORMAT_DICTIONARY:
-        return json.loads(value.decode('utf-8'))
+        return json.loads(value)
     elif hap_format == pyhap_char.HAP_FORMAT_TLV8:
         return str(value)
     elif hap_format in pyhap_char.HAP_FORMAT_NUMERICS:
         return int(value)
     elif hap_format in [pyhap_char.HAP_FORMAT_STRING,
                         pyhap_char.HAP_FORMAT_DATA]:
-        return value.decode('utf-8')
+        return str(value)
 
     return str(value)
 
@@ -271,7 +271,7 @@ class MqttBridge(Bridge):
                 # all adapter
                 if adapter is not None:
                     try:
-                        payload = adapter.input(topic, payload)
+                        payload = adapter.input(topic, payload.decode('utf-8'))
                     except Exception as e:
                         self.warn('Exception in {}.input(): {}'.format(
                             adapter.__name__, e))

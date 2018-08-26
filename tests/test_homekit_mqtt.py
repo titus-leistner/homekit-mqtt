@@ -103,17 +103,17 @@ def test_cfg_loader(config_dir):
 
 def test_mqtt_bridge():
     # test conversion from MQTT to HAP
-    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_BOOL, b'true') is True
-    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_FLOAT, b'3.14') == 3.14
-    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_INT, b'42') == 42
-    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_STRING, b'foo') == 'foo'
-    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_DATA, b'bar') == 'bar'
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_BOOL, 'true') is True
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_FLOAT, '3.14') == 3.14
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_INT, '42') == 42
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_STRING, 'foo') == 'foo'
+    assert mqtt_bridge.mqtt2hap(pyhap_char.HAP_FORMAT_DATA, 'bar') == 'bar'
 
     assert mqtt_bridge.mqtt2hap(
-        pyhap_char.HAP_FORMAT_ARRAY, b'[1, 1, 2, 3]') == [1, 1, 2, 3]
+        pyhap_char.HAP_FORMAT_ARRAY, '[1, 1, 2, 3]') == [1, 1, 2, 3]
 
     assert mqtt_bridge.mqtt2hap(
-        pyhap_char.HAP_FORMAT_ARRAY, b'{"x" : 1, "y" : 2}') == {'x': 1, 'y': 2}
+        pyhap_char.HAP_FORMAT_ARRAY, '{"x" : 1, "y" : 2}') == {'x': 1, 'y': 2}
 
     # test conversion from HAP to python types
     assert mqtt_bridge.hap2var(pyhap_char.HAP_FORMAT_BOOL, True) is True
@@ -131,31 +131,31 @@ def test_mqtt_bridge():
 
 def test_tasmota():
     # test POWER adapter
-    assert tasmota.POWER.input('', b'ON') is True
-    assert tasmota.POWER.input('', b'OFF') is False
-    assert tasmota.POWER.input('', b'{"POWER":"ON"}') is True
+    assert tasmota.POWER.input('', 'ON') is True
+    assert tasmota.POWER.input('', 'OFF') is False
+    assert tasmota.POWER.input('', '{"POWER":"ON"}') is True
 
     assert tasmota.POWER.output('', True) == 'ON'
     assert tasmota.POWER.output('', False) == 'OFF'
 
     # test HOLD adapter
-    assert tasmota.HOLD.input('', b'HOLD') is 1
-    assert tasmota.HOLD.input('', b'ON') is None
+    assert tasmota.HOLD.input('', 'HOLD') is 1
+    assert tasmota.HOLD.input('', 'ON') is None
 
     # test HSB adapters
     assert tasmota.Hue.input(
-        'stat/test/RESULT', b'{"HSBColor":"21,42,63"}') == 21
+        'stat/test/RESULT', '{"HSBColor":"21,42,63"}') == 21
     assert tasmota.Saturation.input(
-        'stat/test/RESULT', b'{"HSBColor":"21,42,63"}') == 42
+        'stat/test/RESULT', '{"HSBColor":"21,42,63"}') == 42
     assert tasmota.Brightness.input(
-        'stat/test/RESULT', b'{"HSBColor":"21,42,63"}') == 63
+        'stat/test/RESULT', '{"HSBColor":"21,42,63"}') == 63
 
     assert tasmota.Hue.output('cmnd/test/HSBColor', 30) == '30,42,63'
     assert tasmota.Saturation.output('cmnd/test/HSBColor', 60) == '30,60,63'
     assert tasmota.Brightness.output('cmnd/test/HSBColor', 90) == '30,60,90'
 
     assert tasmota.Dimmer.input(
-        'stat/test/RESULT', b'{"Dimmer": 42}') == 42
+        'stat/test/RESULT', '{"Dimmer": 42}') == 42
 
     # test ColorTemperature adapter
     assert tasmota.ColorTemperature.input('', '{"CT": 250}') == 250

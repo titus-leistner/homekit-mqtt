@@ -3,8 +3,8 @@ import json
 
 class POWER:
     def input(topic, payload):
-        if chr(payload[0]) != '{':
-            return payload == b'ON'
+        if payload[0] != '{':
+            return payload == 'ON'
         result = json.loads(payload)
         power = result.get('POWER', None)
         if power is None:
@@ -20,7 +20,7 @@ class POWER:
 
 class HOLD:
     def input(topic, payload):
-        if payload == b'HOLD':
+        if payload == 'HOLD':
             return 1
         return None
 
