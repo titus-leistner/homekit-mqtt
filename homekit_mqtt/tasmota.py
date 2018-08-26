@@ -46,7 +46,7 @@ class HSBColor:
         hsb = hsb.split(',')
         HSBColor.cache[HSBColor.gen_key(topic)] = hsb
 
-        return hsb[chan]
+        return int(hsb[chan])
 
     def output(topic, payload, chan=0):
         hsb = HSBColor.cache.get(HSBColor.gen_key(topic), [0, 0, 100])
@@ -75,6 +75,14 @@ class Saturation:
 
 
 class Brightness:
+    def input(topic, payload):
+        return HSBColor.input(topic, payload, 2)
+
+    def output(topic, payload):
+        return HSBColor.output(topic, payload, 2)
+
+
+class Dimmer:
     def input(topic, payload):
         result = json.loads(payload)
         dimmer = result.get('Dimmer', None)

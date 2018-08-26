@@ -16,7 +16,7 @@ from homekit_mqtt import cli
 from pyhap.accessory_driver import AccessoryDriver
 import pyhap.characteristic as pyhap_char
 
-from homekit_mqtt import cfg_loader, mqtt_bridge
+from homekit_mqtt import cfg_loader, mqtt_bridge, tasmota
 
 
 @pytest.fixture(scope='module')
@@ -127,3 +127,38 @@ def test_mqtt_bridge():
 
     assert mqtt_bridge.hap2var(
         pyhap_char.HAP_FORMAT_ARRAY, {'x': 1, 'y': 2}) == '{"x": 1, "y": 2}'
+
+
+def test_tasmota():
+    # test POWER adapter
+    assert tasmota.POWER.input('', b'ON') is True
+    assert tasmota.POWER.input('', b'OFF') is False
+    assert tasmota.POWER.input('', b'{"POWER":"ON"}') is True
+
+    assert tasmota.POWER.output('', True) == 'ON'
+    assert tasmota.POWER.output('', False) == 'OFF'
+
+    # test HOLD adapter
+    assert tasmota.HOLD.input('', b'HOLD') is 1
+    assert tasmota.HOLD.input('', b'ON') is None
+
+    # test HSB adapters
+    assert tasmota.Hue.input(
+        'stat/test/RESULT', b'{"HSBColor":"21,42,63"}') == 21
+    assert tasmota.Saturation.input(
+        'stat/test/RESULT', b'{"HSBColor":"21,42,63"}') == 42
+    assert tasmota.Brightness.input(
+        'stat/test/RESULT', b'{"HSBColor":"21,42,63"}') == 63
+
+    assert tasmota.Hue.output('cmnd/test/HSBColor', 30) == '30,42,63'
+    assert tasmota.Saturation.output('cmnd/test/HSBColor', 60) == '30,60,63'
+    assert tasmota.Brightness.output('cmnd/test/HSBColor', 90) == '30,60,90'
+
+    assert tasmota.Dimmer.input(
+        'stat/test/RESULT', b'{"Dimmer": 42}') == 42
+
+    # test ColorTemperature adapter
+    assert tasmota.ColorTemperature.input('', '{"CT": 250}') == 250
+    assert tasmota.ColorTemperature.output('', 140) == 153
+    assert tasmota.ColorTemperature.output('', 600) == 500
+    assert tasmota.ColorTemperature.output('', 250) == 250
