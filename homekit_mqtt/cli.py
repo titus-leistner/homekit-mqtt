@@ -16,7 +16,7 @@ from homekit_mqtt import cfg_loader
 @click.command()
 @click.option('--reset/--load', default=False,
               help='Reset the bridge before readding it to the Home App again.')
-@click.option('--cfg', default='etc/homekit-mqtt',
+@click.option('--cfg', default='/etc/homekit-mqtt',
               help='The directory containing the accessory configuration.')
 def main(reset, cfg):
     # init logging

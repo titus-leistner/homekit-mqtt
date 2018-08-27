@@ -1,0 +1,11 @@
+[Unit]
+Description = HomeKit MQTT Daemon
+Wants = pigpiod.service
+After = local-fs.target network-online.target pigpiod.service
+
+[Service]
+WorkingDirectory=/etc/homekit-mqtt
+ExecStart = /usr/local/bin/homekit-mqtt
+
+[Install]
+WantedBy = multi-user.target

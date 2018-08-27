@@ -4,6 +4,7 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+import sys
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
@@ -17,7 +18,14 @@ setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
+data_files = []
+
+if sys.platform == 'linux':
+    data_files = [('/etc/systemd/system', ['homekit-mqtt.service']),
+                  ('/etc/homekit-mqtt', ['bridge.cfg'])]
+
 setup(
+    data_files=data_files,
     author="Titus Leistner",
     author_email='mail@titus-leistner.de',
     classifiers=[
@@ -33,7 +41,7 @@ setup(
     description="This is a lightweight bridge between HomeKit and MQTT.",
     entry_points={
         'console_scripts': [
-            'homekit_mqtt=homekit_mqtt.cli:main',
+            'homekit-mqtt=homekit_mqtt.cli:main',
         ],
     },
     python_requires='>=3.5',
