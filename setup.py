@@ -48,7 +48,7 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/titus-leistner/homekit_mqtt',
-    version='0.1.5',
+    version='0.1.6',
     zip_safe=False,
     data_files=[('/etc/systemd/system', ['homekit-mqtt.service']),
                 ('/etc/homekit-mqtt', ['bridge.cfg'])]
