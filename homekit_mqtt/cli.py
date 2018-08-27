@@ -3,6 +3,7 @@
 """HomeKit MQTT Bridge Deamon"""
 import sys
 import os
+import shutil
 import click
 import logging
 import signal
@@ -12,10 +13,32 @@ from homekit_mqtt.mqtt_bridge import MqttBridge
 
 from homekit_mqtt import cfg_loader
 
+logger = logging.getLogger(__name__)
+
+
+def create_cfg(dname):
+    """
+    Create the configuration directory and copy initial bridge.cfg into it.
+
+    :param dname: the config directory
+    :type dmane: str
+    """
+    if not os.path.exists(dname):
+        logger.info('Creating config directory at ' + dname)
+        os.makedirs(dname)
+
+    # copy initial bridge.cfg into place
+    src = os.path.join(
+        (os.path.abspath(os.path.dirname(__file__))), 'data', 'bridge.cfg')
+    dst = os.path.join(dname, 'bridge.cfg')
+    logger.info('Creating ' + dst)
+    shutil.copyfile(src, dst)
+
 
 @click.command()
 @click.option('--reset/--load', default=False,
-              help='Reset the bridge before readding it to the Home App again.')
+              help='Reset the bridge before readding it \
+                    to the Home App again.')
 @click.option('--cfg', default='/etc/homekit-mqtt',
               help='The directory containing the accessory configuration.')
 def main(reset, cfg):
@@ -25,6 +48,10 @@ def main(reset, cfg):
     if reset:
         # remove accessory.state
         os.remove('accessory.state')
+
+    # create config if necessary
+    if not os.path.exists(os.path.join(cfg, 'bridge.cfg')):
+        create_cfg(cfg)
 
     # start the accessory driver on port 51826
     driver = AccessoryDriver(port=51826)
@@ -52,5 +79,4 @@ def main(reset, cfg):
 
 
 if __name__ == "__main__":
-    print('Started')
     sys.exit(main())  # pragma: no cover
