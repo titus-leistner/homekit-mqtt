@@ -48,7 +48,7 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/titus-leistner/homekit_mqtt',
-    version='0.1.8',
+    version='0.1.9',
     zip_safe=False,
     package_dir={'homekit_mqtt': 'homekit_mqtt'},
     package_data={'homekit_mqtt': ['data/*']},
