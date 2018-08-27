@@ -3,9 +3,8 @@ include CONTRIBUTING.md
 include HISTORY.md
 include LICENSE
 include README.md
-include homekit-mqtt.service
-include bridge.cfg
 
+recursive-include homekit_mqtt data *
 recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
