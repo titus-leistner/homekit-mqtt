@@ -4,7 +4,6 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
-import sys
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
@@ -18,14 +17,7 @@ setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
-data_files = []
-
-if sys.platform == 'linux' or sys.platform == 'linux2':
-    data_files = [('/etc/systemd/system', ['homekit-mqtt.service']),
-                  ('/etc/homekit-mqtt', ['bridge.cfg'])]
-
 setup(
-    data_files=data_files,
     author="Titus Leistner",
     author_email='mail@titus-leistner.de',
     classifiers=[
@@ -58,4 +50,6 @@ setup(
     url='https://github.com/titus-leistner/homekit_mqtt',
     version='0.1.5',
     zip_safe=False,
+    data_files=[('/etc/systemd/system', ['homekit-mqtt.service']),
+                ('/etc/homekit-mqtt', ['bridge.cfg'])]
 )
