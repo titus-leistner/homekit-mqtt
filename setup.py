@@ -50,5 +50,6 @@ setup(
     url='https://github.com/titus-leistner/homekit_mqtt',
     version='0.1.7',
     zip_safe=False,
-    package_data={'homekit_mqtt': ['data/*']}
+    package_dir={'homekit_mqtt': 'homekit_mqtt'},
+    package_data={'homekit_mqtt': ['data/*']},
 )
