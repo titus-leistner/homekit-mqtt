@@ -20,7 +20,7 @@ test_requirements = ['pytest', ]
 
 data_files = []
 
-if sys.platform == 'linux':
+if sys.platform == 'linux' or sys.platform == 'linux2':
     data_files = [('/etc/systemd/system', ['homekit-mqtt.service']),
                   ('/etc/homekit-mqtt', ['bridge.cfg'])]
 
